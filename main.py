@@ -27,8 +27,6 @@ elif(swit==0):#zip
     new = open(imgpath, "rb").read().hex() + open(zippath, "rb").read().hex()
 
     result = open("./sample/zipresult.jpg", "wb").write(bytes.fromhex(new))
-    sl.unpack_archive("./sample/result.zip", "./sample")
-
 
 #"""
 
