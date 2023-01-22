@@ -16,10 +16,13 @@ print(f"received : {swit}")
 if (swit == 1):
     # - Unzip : jpg to zip result
     path = input("- Specify the jpg file path : \n")
-    print(f"received : {path}\n")
+    if open(path, "rb").read() == null:
+        print("The path does not exist")
+    else:
+        print(f"received : {path}")
 
     file = open(path, "rb").read().hex()
-    new = "504b0304" + file.split("ffd9504b0304", 2)[1]
+    new = "504b0304" + file.split("ffd9504b0304", 2)[1]  # TODO : error handling
     uznm = getfname(path)
     open("./sample/" + uznm + ".zip", "wb").write(bytes.fromhex(new))  # bytes-like object is required, not 'str'
     print(f"DONE - Check '{uznm}.zip' in './sample'")
