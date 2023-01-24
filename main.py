@@ -24,7 +24,12 @@ if (swit == 1):
         print("The path does not exist")
 
     file = open(path, "rb").read().hex()
-    new = "504b0304" + file.split("ffd9504b0304", 2)[1]  # TODO : error handling
+    new = ""
+    try:
+        new = "504b0304" + file.split("ffd9504b0304", 2)[1]
+    except:
+        print("Could not distinguish the separation point")
+
     uznm = getfname(path)
 
     open("./sample/" + uznm + ".zip", "wb").write(bytes.fromhex(new))  # bytes-like object is required, not 'str'
