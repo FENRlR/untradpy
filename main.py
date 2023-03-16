@@ -7,7 +7,14 @@ def getf(name):
 
 
 def getfname(p):
-    return getf(p).split('.')[0]
+    try:
+        return getf(p).split('.')[0]
+    except:
+        return getf(p)
+
+#TODO: make it in a loop
+#while():
+
 
 
 swit = int(input("- Choose a task \nDecompress = 1, Compress = 0 \n"))
@@ -20,49 +27,74 @@ if (swit == 1):
     try:
         open(path, "rb").read()
         print(f"received : {path}")
-    except:
-        print("The path does not exist")
 
-    file = open(path, "rb").read().hex()
-    new = ""
-    try:
-        new = "504b0304" + file.split("ffd9504b0304", 2)[1]
-    except:
-        print("Could not distinguish the separation point")
+        file = open(path, "rb").read().hex()
+        new = ""
+        try:
+            new = "504b0304" + file.split("ffd9504b0304", 2)[1]
+        except:
+            print("Could not distinguish the separation point")
 
-    uznm = getfname(path)
+        uznm = getfname(path)
 
-    open("./sample/" + uznm + ".zip", "wb").write(bytes.fromhex(new))  # bytes-like object is required, not 'str'
-    print(f"DONE - Check '{uznm}.zip' in './sample'")
+        open("./sample/" + uznm + ".zip", "wb").write(bytes.fromhex(new))  # bytes-like object is required, not 'str'
+        print(f"DONE - Check '{uznm}.zip' in './sample'")
 
-    exswit = int(input("Do you want to unzip it?\nYES = 1, No = 0\n"))
+        exswit = int(input("Do you want to unzip it?\nYES = 1, No = 0\n"))
 
-    while(exswit != 1  or exswit != 0 ):
         if exswit == 1:
             sl.unpack_archive("./sample/" + uznm + ".zip", "./sample/output/" + uznm)
             print(f"DONE - Check the result in './sample/output/{uznm}'")
         elif exswit == 0:
-            break
-        else:
-            continue
+            print("Exiting...")#dummy
 
-elif (swit == 0):
-    # - Zip : file -> zip -> jpg
-    # jpg|jpeg|png|gif|webp
-    zippath = input("- Specify the file path : \n")
-
-    try:
-        open(zippath, "rb").read()
-        print(f"received : {zippath}")
     except:
         print("The path does not exist")
 
-    sp = zippath.split("/")
-    nsp = sp.pop()
-    ssp = "/".join(map(str, sp))
-    nzip = "./sample/temp/" + nsp.split(".")[0] + ".zip"
+elif (swit == 0):
+    # - Zip : target file -> zip -> jpg
+    # jpg|jpeg|png|gif|webp
+    zippath = input("- Specify the file/folder path : \n")
+    #psw = 0
 
-    sl.make_archive("./sample/temp/" + nsp.split(".")[0], "zip", ssp, nsp)
+    sp = ""
+    nsp = ""
+    ssp = ""
+    nzip = ""
+
+    #- Probe
+    if zippath.split("/").pop() == getfname(zippath): # folder case
+        try:
+            temp = os.listdir(zippath)
+            print(f"received : {zippath}")
+            #psw = 1
+
+            sp = zippath.split("/")
+            nsp = sp.pop()#폴더명
+            ssp = "/".join(map(str, sp))
+
+            nzip = "./sample/temp/" + nsp + ".zip"#최종 파일의 경로
+
+            sl.make_archive("./sample/temp/" + nsp, "zip", ssp, nsp)
+
+        except:
+            print("The path does not exist")
+
+    else: # file case
+        try:
+            open(zippath, "rb").read()
+            print(f"received : {zippath}")
+            #psw = 2
+
+            sp = zippath.split("/")
+            nsp = sp.pop()#파일명
+            ssp = "/".join(map(str, sp))
+            nzip = "./sample/temp/" + nsp.split(".")[0] + ".zip"
+
+            sl.make_archive("./sample/temp/" + nsp.split(".", 2)[0], "zip", ssp, nsp)  # 파일인 경우
+        except:
+            print("The path does not exist")
+
 
     imgpath = input("- Specify the jpg file path : \n")
     try:
