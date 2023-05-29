@@ -1,3 +1,4 @@
+import os
 import shutil as sl
 
 
@@ -63,7 +64,7 @@ while psw == 1:
                     sp = zippath.split("/")
                     nsp = sp.pop()  # 폴더명
                     ssp = "/".join(map(str, sp))
-                    nzip = "./sample/temp/" + nsp + ".zip"  # 최종 파일의 경로
+                    nzip = "./sample/temp/" + nsp + ".zip"  # final destination
                     sl.make_archive("./sample/temp/" + nsp, "zip", ssp, nsp)
                 except:
                     print("The path does not exist")
@@ -73,10 +74,10 @@ while psw == 1:
                     open(zippath, "rb").read()
                     print(f"received : {zippath}")
                     sp = zippath.split("/")
-                    nsp = sp.pop()  # 파일명
+                    nsp = sp.pop()  # file name
                     ssp = "/".join(map(str, sp))
                     nzip = "./sample/temp/" + nsp.split(".")[0] + ".zip"
-                    sl.make_archive("./sample/temp/" + nsp.split(".", 2)[0], "zip", ssp, nsp)  # 파일인 경우
+                    sl.make_archive("./sample/temp/" + nsp.split(".", 2)[0], "zip", ssp, nsp)  # file case
                 except:
                     print("The path does not exist")
                     break
